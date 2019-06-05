@@ -57,7 +57,7 @@ def create_repo(target, source, env):
 
     # copy gpg-home to VM-accessible location.
     if subprocess.call(["cp", "-r", gpg_home, tmp_dir]):
-        print "Cannot copy %s to %s" % (gpg_home, tmp_dir)
+        print("Cannot copy %s to %s" % (gpg_home, tmp_dir))
         return 1
     else:
         # ... and /vagrant-ify the new gpg-home path.
@@ -162,9 +162,9 @@ def destroy_virtual_boxes(target, source, env):
     if not force:
         msg = "You must manually confirm deletion of VMs."
         h_border = "-" * len(msg)
-        print h_border
-        print msg
-        print h_border
+        print(h_border)
+        print(msg)
+        print(h_border)
     else:
         destroy_cmd.append("-f")
     destroy_cmd.extend(virts)
@@ -194,15 +194,15 @@ def sync_to_remote_repo(target, source, env):
     for pkg_type in _PACKAGE_TYPES:
         pkg_root = os.path.join(target_dir, pkg_type)
         if not (os.path.isdir(pkg_root) and os.listdir(pkg_root)):
-            print "No content to sync from: %s" % pkg_root
-            print "Sync-to-remote was NOT STARTED."
+            print("No content to sync from: %s" % pkg_root)
+            print("Sync-to-remote was NOT STARTED.")
             return 1
 
     pkg_types_str = "{%s}" % ",".join(_PACKAGE_TYPES)
-    print "This will copy <project_root>/%s/%s to %s/%s" % \
-        (target_dir, pkg_types_str, repo_root, pkg_types_str)
-    print "All existing content in %s/%s will remain as is." % \
-        (repo_root, pkg_types_str)
+    print("This will copy <project_root>/%s/%s to %s/%s" % \
+        (target_dir, pkg_types_str, repo_root, pkg_types_str))
+    print("All existing content in %s/%s will remain as is." % \
+        (repo_root, pkg_types_str))
     if raw_input("Are you sure? [y/N] ").lower() not in ["y", "yes"]:
         return 1
 
@@ -213,7 +213,7 @@ def sync_to_remote_repo(target, source, env):
 def _create_repo(virt, virt_type, gpg_home, local_repo_root):
     # Assuming that all requisite packages are available on virt.
     # (see build-linux/howto.txt)
-    print "\nCreating local %s repository..." % virt_type
+    print("\nCreating local %s repository..." % virt_type)
     make_file = os.path.join(
         remote_project_root,
         build_linux_dir,
@@ -227,17 +227,17 @@ def _create_repo(virt, virt_type, gpg_home, local_repo_root):
 def _pre_sync_checks(env):
     repo_root = env.get("repo_root")
     if not repo_root:
-        print "No repo-root was provided!"
+        print("No repo-root was provided!")
         return None
     else:
         repo_root = repo_root[0]
 
     if repo_root.startswith("s3://"):
         if subprocess.call(["which", "s3cmd"]):
-            print "No s3cmd found!\nInstall from http://s3tools.org/download"
+            print("No s3cmd found!\nInstall from http://s3tools.org/download")
             return None
     else:
-        print "Unrecognized remote repository type for location: " + repo_root
+        print("Unrecognized remote repository type for location: " + repo_root)
         return None
 
     return repo_root
@@ -258,7 +258,7 @@ def _sync_s3_package_repo(
         else:
             src = "%s/%s/" % (s3_root, pkg_type)
             dest = os.path.join(local_root, pkg_type, "")
-        print "Syncing %s -> %s..." % (src, dest)
+        print("Syncing %s -> %s..." % (src, dest))
         r += subprocess.call(["s3cmd", "sync", src, dest])
     return r
 
@@ -337,7 +337,7 @@ def _get_minimal_virt_names(running=False):
         subprocess
         .check_output(["vagrant", "status"])
         .splitlines()
-        if v.startswith("agent-minimal-") and
+        if str(v).startswith("agent-minimal-") and
         (not running or v.find(" running (") >= 0)
     ]
 
@@ -348,7 +348,7 @@ def _run_on_virts(remote_command, virts=None):
         virts = _get_minimal_virt_names(running=True)
     for virt in virts:
         command = ["vagrant", "ssh", virt, "-c", remote_command]
-        print "Running %s" % command
+        print("Running %s" % command)
         exit_code += subprocess.call(command)
     return exit_code
 
