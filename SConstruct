@@ -33,6 +33,8 @@ import os
 import subprocess
 import sys
 
+if 'proxy' in ARGUMENTS:
+    print("Proxy: %s"%ARGUMENTS['proxy'])
 
 _PACKAGE_TYPES = ["deb", "rpm"]
 _DEB_BUILD_VM = "agent-minimal-ubuntu1204"
@@ -139,7 +141,11 @@ def run_unit_tests_local(target, source, env):
     test_paths.sort()
     test_command = [sys.executable, "run-tests.py"]
     test_command.extend(test_paths)
-    return subprocess.call(test_command)
+    kw = {}
+    if 'proxy' in ARGUMENTS:
+        proxy = ARGUMENTS['proxy']
+        kw['env'] = {'http_proxy':proxy, 'https_proxy':proxy}
+    return subprocess.call(test_command, **kw)
 
 
 def start_virtual_boxes(target, source, env):

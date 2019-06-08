@@ -37,14 +37,13 @@ def runtests(test_files):
     test_env["PYTHONPATH"] = \
         test_env.get("PYTHONPATH", "") + os.pathsep + os.getcwd()
     for test_file in test_files:
-        print >> sys.stderr, "FILE:", test_file
+        sys.stderr.write("FILE: "+test_file+'\n')
         exit_code = subprocess.call([sys.executable, test_file], env=test_env)
         total += 1
         errs += (exit_code != 0)
-    print >> sys.stderr, "SUMMARY: %s total / %s error (%s)" \
-        % (total, errs, sys.executable)
+    sys.stderr.write("SUMMARY: %s total / %s error (%s)\n" \
+        % (total, errs, sys.executable))
     return errs
-
 
 if __name__ == "__main__":
     project_dir = os.path.dirname(os.path.abspath(__file__))
