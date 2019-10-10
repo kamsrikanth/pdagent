@@ -29,7 +29,10 @@
 # CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
 # ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 # POSSIBILITY OF SUCH DAMAGE.
-#
+
+
+#Daemon running in background: all essential functions: load config, check & write directories,
+#create & manage tasks thread
 
 
 # standard python modules
