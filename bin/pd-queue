@@ -28,7 +28,15 @@
 # CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
 # ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 # POSSIBILITY OF SUCH DAMAGE.
-#
+
+
+
+#PD queue file, builds the commandline argument parser for the local PD event queue. It checks Service keys and implements
+#retry function. Reports statuses from queue based on service keys (snapshot of events from all queue). File loads, PD agent 
+#config as well as loads parser and command-line args.
+
+
+
 
 def build_queue_arg_parser(description):
     from pdagent.thirdparty.argparse import ArgumentParser
@@ -36,6 +44,10 @@ def build_queue_arg_parser(description):
     subparsers = parser.add_subparsers(title="sub-commands")
     retry_parser_desc = "set up 'dead' PagerDuty events for retry."
     status_parser_desc = "print out status of local event queue."
+#Set up command-line argument parser for queue
+
+
+
 
     retry_parser = subparsers.add_parser(
         "retry",
@@ -52,6 +64,7 @@ def build_queue_arg_parser(description):
         help="retry events in all Service API Keys (not to be used with -k)"
         )
     retry_parser.set_defaults(func=_retry)
+#Sets up retry parser and adds commandline arguments for keys
 
     status_parser = subparsers.add_parser(
         "status",
@@ -63,7 +76,7 @@ def build_queue_arg_parser(description):
         help="print status of events in given Service API Key"
         )
     status_parser.set_defaults(func=_status)
-
+    #adds cmd argument service key for status parser to return all event statuses in a given API key
     return parser
 
 
@@ -84,7 +97,7 @@ def _retry(agent_config, parser, args):
             args.service_key  # 'None' for all keys.
             )
         print "%d event(s) set up for retry." % count
-
+    #Based on Service Key, queue is generated for events.
 
 def _status(agent_config, _, args):
     # prints queue snapshot stats in this format:
@@ -124,6 +137,7 @@ def _status(agent_config, _, args):
                 state.get("succeeded_events", empty_dict).get("count", 0),
                 state.get("failed_events", empty_dict).get("count", 0)
                 )
+#Returns Snapshot of event queue with pending, success and in error based on service keys
 
 
 def main():
@@ -133,7 +147,7 @@ def main():
     parser = build_queue_arg_parser(description)
     args = parser.parse_args()
     args.func(load_agent_config(), parser, args)
-
+#Config parser (loads config file), for agent config file. Loads local quee based on config
 
 if __name__ == "__main__":
     try:
