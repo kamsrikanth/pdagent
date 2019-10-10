@@ -14,7 +14,11 @@
 #
 # See Stevens' "Advanced Programming in the UNIX Environment" (ISBN 0201563177)
 # for details about double-forking.
-#
+
+
+
+#"Unix process daemonization"
+
 
 import atexit
 import os
