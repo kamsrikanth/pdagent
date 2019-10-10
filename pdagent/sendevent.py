@@ -105,7 +105,7 @@ class SendEventTask(RepeatingTask):
             logger.error(
                 "Certificate validation error while sending event: %s" % e
                 )
-            logger.debug("Traceback:", exc_info=True)
+            logger.debug("Traceback:", exc_info=True) 
             return ConsumeEvent.STOP_ALL
         except socket.timeout as e:
             logger.error("Timeout while sending event: %s" % e)
